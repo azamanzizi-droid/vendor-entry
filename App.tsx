@@ -34,6 +34,15 @@ const App: React.FC = () => {
   const [pinExists, setPinExists] = useState(() => !!localStorage.getItem('settingsPin'));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [isAdminMode, setIsAdminMode] = useState<boolean>(() => {
+    try {
+      const localData = localStorage.getItem('isAdminMode');
+      return localData ? JSON.parse(localData) : false;
+    } catch (error) {
+      console.error("Could not parse isAdminMode from localStorage", error);
+      return false;
+    }
+  });
 
   useEffect(() => {
     localStorage.setItem('inventoryItems', JSON.stringify(items));
@@ -46,6 +55,10 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('sheetUrl', sheetUrl);
   }, [sheetUrl]);
+
+  useEffect(() => {
+    localStorage.setItem('isAdminMode', JSON.stringify(isAdminMode));
+  }, [isAdminMode]);
 
   const addToast = (message: string, type: 'success' | 'error') => {
     const id = Date.now();
@@ -135,7 +148,7 @@ const App: React.FC = () => {
           />
           <div className="mt-12">
              <h2 className="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-6 border-b-2 border-slate-200 dark:border-slate-700 pb-2">Rekod Terkini</h2>
-            <InventoryList items={items} onDeleteItem={deleteItem} />
+            <InventoryList items={items} onDeleteItem={deleteItem} isAdminMode={isAdminMode} />
           </div>
         </div>
       </main>
@@ -145,6 +158,8 @@ const App: React.FC = () => {
         onSave={setSheetUrl}
         currentUrl={sheetUrl}
         onPinChange={handlePinUpdate}
+        isAdminMode={isAdminMode}
+        onSetIsAdminMode={setIsAdminMode}
       />
       <PinModal
         isOpen={isPinModalOpen}

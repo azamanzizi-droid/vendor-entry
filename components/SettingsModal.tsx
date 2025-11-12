@@ -6,6 +6,8 @@ interface SettingsModalProps {
   onSave: (url: string) => void;
   currentUrl: string;
   onPinChange: () => void;
+  isAdminMode: boolean;
+  onSetIsAdminMode: (isAdmin: boolean) => void;
 }
 
 const appsScriptCode = `const SHEET_NAME = 'Inventori';
@@ -46,7 +48,7 @@ function doPost(e) {
   }
 }`;
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave, currentUrl, onPinChange }) => {
+export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onSave, currentUrl, onPinChange, isAdminMode, onSetIsAdminMode }) => {
   const [url, setUrl] = useState(currentUrl);
   const [copied, setCopied] = useState(false);
 
@@ -137,8 +139,25 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, o
           </div>
           
            <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
-             <h3 className="font-bold text-lg text-slate-800 dark:text-slate-200">Keselamatan</h3>
-             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Lindungi halaman tetapan dengan nombor PIN.</p>
+             <h3 className="font-bold text-lg text-slate-800 dark:text-slate-200">Keselamatan & Ciri Admin</h3>
+             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Lindungi halaman tetapan dan aktifkan ciri admin.</p>
+
+            <div className="mt-4 flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                <div>
+                  <h4 className="font-semibold text-slate-700 dark:text-slate-300">Mod Admin</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Tunjukkan butang padam pada setiap rekod.</p>
+                </div>
+                <label htmlFor="admin-toggle" className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    id="admin-toggle" 
+                    className="sr-only peer" 
+                    checked={isAdminMode} 
+                    onChange={(e) => onSetIsAdminMode(e.target.checked)}
+                  />
+                  <div className="w-11 h-6 bg-slate-200 dark:bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-teal-600"></div>
+                </label>
+            </div>
 
              {!pin ? (
                 <div className="mt-4 space-y-3 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
