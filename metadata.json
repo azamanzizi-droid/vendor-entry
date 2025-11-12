@@ -1,0 +1,5 @@
+{
+  "name": "vendor-entry",
+  "description": "Aplikasi mudah untuk merekod inventori harian untuk Gerai ZZ. Masukkan nama menu, vendor, kuantiti, dan nota.",
+  "requestFramePermissions": []
+}
